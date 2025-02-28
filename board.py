@@ -21,16 +21,23 @@ class Board:
                 else:
                     self.board[y][x] = (None, None)  # 普通格子，无棋子
 
+        # 青方初始“叶”棋子
+        self.board[1][self.width // 2 - 1] = (None, 'green_leaf')
+        self.board[1][self.width // 2] = (None, 'green_leaf')
+        # 灰方初始“叶”棋子
+        self.board[self.height - 2][self.width // 2 - 1] = (None, 'gray_leaf')
+        self.board[self.height - 2][self.width // 2] = (None, 'gray_leaf')
+
     def draw(self, screen):
         for y in range(self.height):
             for x in range(self.width):
                 cell_type, piece = self.board[y][x]
+                # 绘制格子
                 color = WHITE
                 if cell_type == 'green_root':
                     color = GREEN
                 elif cell_type == 'gray_root':
                     color = GRAY
-                # 绘制格子
                 pygame.draw.rect(
                     screen,
                     color,
@@ -40,20 +47,20 @@ class Board:
                     screen,
                     BLACK,
                     (x * self.grid_size, y * self.grid_size, self.grid_size, self.grid_size),
-                    1  # 边框宽度
+                    1
                 )
                 # 绘制棋子
-                if piece == 'gray_piece':
+                if piece == 'gray_leaf':
                     pygame.draw.circle(
                         screen,
                         RED,  # 灰方棋子颜色（示例用红色）
                         (x * self.grid_size + self.grid_size // 2, y * self.grid_size + self.grid_size // 2),
-                        self.grid_size // 2
+                        self.grid_size // 2 - 5  # 留出边框
                     )
-                elif piece == 'green_piece':
+                elif piece == 'green_leaf':
                     pygame.draw.circle(
                         screen,
                         BLUE,  # 青方棋子颜色（示例用蓝色）
                         (x * self.grid_size + self.grid_size // 2, y * self.grid_size + self.grid_size // 2),
-                        self.grid_size // 2
+                        self.grid_size // 2 - 5
                     )

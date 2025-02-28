@@ -38,31 +38,56 @@ class Game:
 
     def place_piece(self, x, y):
         # 检查是否可落子
-        if self.board.board[y][x][0] is not None and self.is_valid_position(x, y):
-            # 根据当前玩家放置棋子
+        if self.board.board[y][x][1] is None and self.is_valid_position(x, y):
+            # 放置“叶”棋子
             if self.current_player == PLAYER_GRAY:
-                self.board.board[y][x] = (self.board.board[y][x][0], 'gray_piece')
-                # 检查胜利条件
-                if self.is_green_root_area(y, x):
-                    self.gray_count_in_green_root += 1
-                    if self.gray_count_in_green_root >= VICTORY_CONDITION:
-                        self.game_over = True
-                        self.winner = PLAYER_GRAY
+                self.board.board[y][x] = (None, 'gray_leaf')
             else:
-                self.board.board[y][x] = (self.board.board[y][x][0], 'green_piece')
-                # 检查胜利条件
-                if self.is_gray_root_area(y, x):
-                    self.green_count_in_gray_root += 1
-                    if self.green_count_in_gray_root >= VICTORY_CONDITION:
-                        self.game_over = True
-                        self.winner = PLAYER_GREEN
+                self.board.board[y][x] = (None, 'green_leaf')
             # 切换玩家
             self.current_player = PLAYER_GREEN if self.current_player == PLAYER_GRAY else PLAYER_GRAY
 
     def is_valid_position(self, x, y):
         # 检查是否在棋盘内
-        return 0 <= x < BOARD_WIDTH and 0 <= y < BOARD_HEIGHT
-        # 还需要添加更多规则，如不能在己方根源落子等
+        if not (0 <= x < self.width and 0 <= y < self.height):
+            return False
+
+        # 检查是否在自己的根源区域
+        if self.current_player == PLAYER_GRAY:
+            # 灰方玩家不能在自己的根源区域落子
+            if y == self.height - 1 and (x >= self.width // 4 and x < self.width * 3 // 4):
+                return False
+        else:
+            # 青方玩家不能在自己的根源区域落子
+            if y == 0 and (x >= self.width // 4 and x < self.width * 3 // 4):
+                return False
+
+        # 检查是否在“叶”棋子周围
+        if self.current_player == PLAYER_GRAY:
+            leaf_color = 'gray_leaf'
+        else:
+            leaf_color = 'green_leaf'
+
+        # 检查周围八个格子是否有“叶”棋子
+        for dx in [-1, 0, 1]:
+            for dy in [-1, 0, 1]:
+                if dx == 0 and dy == 0:
+                    continue
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < self.width and 0 <= ny < self.height:
+                    # 检查周围格子是否在根源区域
+                    if not self.is_growable(nx, ny):
+                        continue  # 如果在根源区域，跳过该格子
+                    if self.board.board[ny][nx][1] == leaf_color:
+                        return True
+        return False
+
+    def is_growable(self, x, y):
+        # 检查棋子是否在对方的根源区域
+        if self.current_player == PLAYER_GRAY:
+            return not (y == 0 and (x >= self.width // 4 and x < self.width * 3 // 4))
+        else:
+            return not (y == self.height - 1 and (x >= self.width // 4 and x < self.width * 3 // 4))
 
     def is_green_root_area(self, y, x):
         # 检查是否在青方根源区域内
