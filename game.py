@@ -28,7 +28,7 @@ class Game:
                     if self.is_win():  # 判定是否胜利
                         self.game_over = True
                         self.winner = self.current_player
-                    self.current_player = PLAYER_GREEN if self.current_player == PLAYER_GRAY else PLAYER_GRAY   # 切换玩家
+
             self.draw()
             pygame.display.flip()
             self.clock.tick(FPS)
@@ -51,6 +51,71 @@ class Game:
 
             # 推动逻辑
             self.push_pieces(x, y)
+            # 消除逻辑
+            self.eliminate_pieces()
+            # 切换玩家
+            self.current_player = PLAYER_GREEN if self.current_player == PLAYER_GRAY else PLAYER_GRAY
+
+    def eliminate_pieces(self):
+        # 获取当前玩家和敌方玩家的棋子颜色
+        if self.current_player == PLAYER_GRAY:
+            player_piece = 'gray_leaf'
+            enemy_piece = 'green_leaf'
+        else:
+            player_piece = 'green_leaf'
+            enemy_piece = 'gray_leaf'
+
+        # 检查纵向消除（当前玩家）
+        for x in range(self.width):
+            count = 0
+            for y in range(self.height):
+                if self.board.board[y][x][1] == player_piece:
+                    count += 1
+                else:
+                    count = 0
+                if count >= 3:
+                    # 消除从 y-2 到 y 的棋子
+                    for i in range(y - 2, y + 1):
+                        self.board.board[i][x] = (None, None)
+
+        # 检查横向消除（当前玩家）
+        for y in range(self.height):
+            count = 0
+            for x in range(self.width):
+                if self.board.board[y][x][1] == player_piece:
+                    count += 1
+                else:
+                    count = 0
+                if count >= 3:
+                    # 消除从 x-2 到 x 的棋子
+                    for i in range(x - 2, x + 1):
+                        self.board.board[y][i] = (None, None)
+
+        # 检查纵向消除（敌方玩家）
+        for x in range(self.width):
+            count = 0
+            for y in range(self.height):
+                if self.board.board[y][x][1] == enemy_piece:
+                    count += 1
+                else:
+                    count = 0
+                if count >= 3:
+                    # 消除从 y-2 到 y 的棋子
+                    for i in range(y - 2, y + 1):
+                        self.board.board[i][x] = (None, None)
+
+        # 检查横向消除（敌方玩家）
+        for y in range(self.height):
+            count = 0
+            for x in range(self.width):
+                if self.board.board[y][x][1] == enemy_piece:
+                    count += 1
+                else:
+                    count = 0
+                if count >= 3:
+                    # 消除从 x-2 到 x 的棋子
+                    for i in range(x - 2, x + 1):
+                        self.board.board[y][i] = (None, None)
 
     def push_pieces(self, x, y):
         # 获取当前玩家的敌方玩家
