@@ -78,7 +78,7 @@ class Game:
                     count += 1
                     if self.is_in_root(x, y):
                         root_count += 1
-                        print(root_count)
+
                 else:
                     count = 0
                     root_count = 0
@@ -101,7 +101,7 @@ class Game:
                     count += 1
                     if self.is_in_root(x, y):
                         root_count += 1
-                        print(root_count)
+
                 else:
                     count = 0
                     root_count = 0
@@ -124,7 +124,7 @@ class Game:
                     count += 1
                     if self.is_in_root(x, y):
                         root_count += 1
-                        print(root_count)
+
                 else:
                     count = 0
                     root_count = 0
@@ -147,7 +147,7 @@ class Game:
                     count += 1
                     if self.is_in_root(x, y):
                         root_count += 1
-                        print(root_count)
+
                 else:
                     count = 0
                     root_count = 0
