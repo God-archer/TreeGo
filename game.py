@@ -168,9 +168,9 @@ class Game:
 
         # 计算最后一位棋子的新位置
         new_y, new_x = current_y + dy, current_x + dx
-        # 检查新位置是否在己方根源区域
-        if self.is_in_own_root(new_x, new_y):
-            # 不能推到己方根源区域
+        # 检查新位置是否在对方根源区域
+        if self.is_in_opponent_root(new_x, new_y):
+            # 不能把对方的棋子推到对方根源区域
             return
 
         # 检查新位置是否在棋盘内且为空
@@ -191,7 +191,7 @@ class Game:
             # 如果无法推动到最后一个位置，整条链式移动失败
             pass
 
-    def is_in_own_root(self, x, y):
+    def is_in_opponent_root(self, x, y):
         if self.current_player == PLAYER_GRAY:
             # 灰方玩家检查是否在青方根源区域
             return y == 0 and (x >= self.width // 4 and x < self.width * 3 // 4)
