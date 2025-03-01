@@ -23,8 +23,12 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.game_over = True
-                if event.type == pygame.MOUSEBUTTONDOWN and not self.game_over:
-                    self.handle_click(event.pos)
+                if event.type == pygame.MOUSEBUTTONDOWN and not self.game_over:  # 如果按下鼠标
+                    self.handle_click(event.pos)  # 尝试进行落子
+                    if self.is_win():  # 判定是否胜利
+                        self.game_over = True
+                        self.winner = self.current_player
+                    self.current_player = PLAYER_GREEN if self.current_player == PLAYER_GRAY else PLAYER_GRAY   # 切换玩家
             self.draw()
             pygame.display.flip()
             self.clock.tick(FPS)
@@ -44,8 +48,17 @@ class Game:
                 self.board.board[y][x] = (None, 'gray_leaf')
             else:
                 self.board.board[y][x] = (None, 'green_leaf')
-            # 切换玩家
-            self.current_player = PLAYER_GREEN if self.current_player == PLAYER_GRAY else PLAYER_GRAY
+
+    def is_win(self):
+        if self.current_player == PLAYER_GRAY:
+            for x in range(self.width // 4, self.width * 3 // 4):
+                if self.board.board[0][x][1] != 'gray_leaf':
+                    return False
+        else:
+            for x in range(self.width // 4, self.width * 3 // 4):
+                if self.board.board[BOARD_HEIGHT-1][x][1] != 'green_leaf':
+                    return False
+        return True
 
     def is_valid_position(self, x, y):
         # 检查是否在棋盘内
@@ -107,4 +120,5 @@ class Game:
         # 显示胜利信息
         if self.game_over:
             text = font.render(f"Player {'Gray' if self.winner == PLAYER_GRAY else 'Green'} wins!", True, RED)
+            print(f"Player {'Gray' if self.winner == PLAYER_GRAY else 'Green'} wins!")
             self.screen.blit(text, (SCREEN_WIDTH // 2 - 150, SCREEN_HEIGHT // 2))
