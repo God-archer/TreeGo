@@ -1,6 +1,12 @@
+import pygame
+
 # 棋盘单元格结构：(cell_type, piece_type)
 # cell_type: green_root, gray_root, None
 # piece_type: gray_piece, green_piece, None
+
+# 游戏窗体
+TITLE = "树棋TreeGo"  # 标题
+ICON = pygame.image.load("assets/ICON.jpg")  # 图标
 
 # 游戏配置
 SCREEN_WIDTH = 800
