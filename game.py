@@ -45,9 +45,9 @@ class Game:
         if self.board.board[y][x][1] is None and self.is_valid_position(x, y):
             # 放置“叶”棋子
             if self.current_player == PLAYER_GRAY:
-                self.board.board[y][x] = (None, 'gray_leaf')
+                self.board.board[y][x] = (self.board.board[y][x][0], 'gray_leaf')
             else:
-                self.board.board[y][x] = (None, 'green_leaf')
+                self.board.board[y][x] = (self.board.board[y][x][0], 'green_leaf')
 
             # 推动逻辑
             self.push_pieces(x, y)
@@ -57,65 +57,109 @@ class Game:
             self.current_player = PLAYER_GREEN if self.current_player == PLAYER_GRAY else PLAYER_GRAY
 
     def eliminate_pieces(self):
-        # 获取当前玩家和敌方玩家的棋子颜色
+        # 获取当前玩家和敌方玩家的棋子颜色，根源颜色
         if self.current_player == PLAYER_GRAY:
             player_piece = 'gray_leaf'
             enemy_piece = 'green_leaf'
+            player_root = "gray_root"
+            enemy_root = "green_root"
         else:
             player_piece = 'green_leaf'
             enemy_piece = 'gray_leaf'
+            player_root = "green_root"
+            enemy_root = "gray_root"
 
         # 检查纵向消除（当前玩家）
         for x in range(self.width):
             count = 0
+            root_count = 0
             for y in range(self.height):
                 if self.board.board[y][x][1] == player_piece:
                     count += 1
+                    if self.is_in_root(x, y):
+                        root_count += 1
+                        print(root_count)
                 else:
                     count = 0
+                    root_count = 0
+
+                if root_count > 1:
+                    count = 0
+                    root_count = 0
+
                 if count >= 3:
                     # 消除从 y-2 到 y 的棋子
                     for i in range(y - 2, y + 1):
-                        self.board.board[i][x] = (None, None)
+                        self.board.board[i][x] = (self.board.board[i][x][0], None)
 
         # 检查横向消除（当前玩家）
         for y in range(self.height):
             count = 0
+            root_count = 0
             for x in range(self.width):
                 if self.board.board[y][x][1] == player_piece:
                     count += 1
+                    if self.is_in_root(x, y):
+                        root_count += 1
+                        print(root_count)
                 else:
                     count = 0
+                    root_count = 0
+
+                if root_count > 1:
+                    count = 0
+                    root_count = 0
+
                 if count >= 3:
                     # 消除从 x-2 到 x 的棋子
                     for i in range(x - 2, x + 1):
-                        self.board.board[y][i] = (None, None)
+                        self.board.board[y][i] = (self.board.board[y][i][0], None)
 
         # 检查纵向消除（敌方玩家）
         for x in range(self.width):
             count = 0
+            root_count = 0
             for y in range(self.height):
                 if self.board.board[y][x][1] == enemy_piece:
                     count += 1
+                    if self.is_in_root(x, y):
+                        root_count += 1
+                        print(root_count)
                 else:
                     count = 0
+                    root_count = 0
+
+                if root_count > 1:
+                    count = 0
+                    root_count = 0
+
                 if count >= 3:
                     # 消除从 y-2 到 y 的棋子
                     for i in range(y - 2, y + 1):
-                        self.board.board[i][x] = (None, None)
+                        self.board.board[i][x] = (self.board.board[i][x][0], None)
 
         # 检查横向消除（敌方玩家）
         for y in range(self.height):
             count = 0
+            root_count = 0
             for x in range(self.width):
                 if self.board.board[y][x][1] == enemy_piece:
                     count += 1
+                    if self.is_in_root(x, y):
+                        root_count += 1
+                        print(root_count)
                 else:
                     count = 0
+                    root_count = 0
+
+                if root_count > 1:
+                    count = 0
+                    root_count = 0
+
                 if count >= 3:
                     # 消除从 x-2 到 x 的棋子
                     for i in range(x - 2, x + 1):
-                        self.board.board[y][i] = (None, None)
+                        self.board.board[y][i] = (self.board.board[y][i][0], None)
 
     def push_pieces(self, x, y):
         # 获取当前玩家的敌方玩家
@@ -198,6 +242,9 @@ class Game:
         else:
             # 青方玩家检查是否在灰方根源区域
             return y == self.height - 1 and (x >= self.width // 4 and x < self.width * 3 // 4)
+
+    def is_in_root(self, x, y):
+        return (y == 0 and (x >= self.width // 4 and x < self.width * 3 // 4)) or (y == self.height - 1 and (x >= self.width // 4 and x < self.width * 3 // 4))
 
     def is_win(self):
         if self.current_player == PLAYER_GRAY:
