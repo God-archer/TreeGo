@@ -7,10 +7,10 @@ class Board:
         self.width = BOARD_WIDTH
         self.height = BOARD_HEIGHT
         self.board = [[(None, None) for _ in range(self.width)] for _ in range(self.height)]  # 初始化为 (None, None)
-        # 初始化棋盘状态（根区域）
-        self.setup_roots()
+        # 初始化棋盘状态
+        self.setup_board()
 
-    def setup_roots(self):
+    def setup_board(self):
         # 初始化根源区域
         for y in range(self.height):
             for x in range(self.width):
