@@ -11,5 +11,3 @@ TreeGo/
 ├── assets/          # 图像资源（可扩展）
 
 ├── config.py        # 配置文件
-
-└── rules.txt        # 规则说明（可选）
