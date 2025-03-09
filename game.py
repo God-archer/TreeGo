@@ -489,25 +489,26 @@ class Game:
         self.board.draw(self.screen)
         
         # 显示当前玩家和选择的棋子类型
-        font = pygame.font.SysFont(None, 36)
+        font = pygame.font.Font("c:\Windows\Fonts\msyh.ttc", 18)  # 使用微软雅黑字体
         player_text = f"当前玩家：{'灰方' if self.current_player == PLAYER_GRAY else '青方'}"
-        piece_text = f"当前棋子：{'叶' if self.selected_piece_type == 'leaf' else '枝' if self.selected_piece_type == 'branch' else '根'}"
+        # # 已被棋子选择系统代替
+        # piece_text = f"当前棋子：{'叶' if self.selected_piece_type == 'leaf' else '枝' if self.selected_piece_type == 'branch' else '干'}"
         
         player_surface = font.render(player_text, True, BLACK)
-        piece_surface = font.render(piece_text, True, BLACK)
+        # piece_surface = font.render(piece_text, True, BLACK)
         
         self.screen.blit(player_surface, (10, 10))
-        self.screen.blit(piece_surface, (10, 50))
+        # self.screen.blit(piece_surface, (10, 50))
         
         # 绘制棋子选择按钮
         button_y = SCREEN_HEIGHT - 60
-        for i, piece_type in enumerate(['leaf', 'branch', 'root']):
+        for i, piece_type in enumerate(['leaf', 'branch', 'trunk']):
             button_rect = pygame.Rect(10 + i * 120, button_y, 100, 40)
             color = GREEN if self.selected_piece_type == piece_type else WHITE
             pygame.draw.rect(self.screen, color, button_rect)
             pygame.draw.rect(self.screen, BLACK, button_rect, 2)
             
-            piece_name = '叶' if piece_type == 'leaf' else '枝' if piece_type == 'branch' else '根'
+            piece_name = '叶' if piece_type == 'leaf' else '枝' if piece_type == 'branch' else '干'
             text = font.render(piece_name, True, BLACK)
             text_rect = text.get_rect(center=button_rect.center)
             self.screen.blit(text, text_rect)
