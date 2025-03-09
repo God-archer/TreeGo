@@ -22,9 +22,15 @@ BOARD_HEIGHT = 8
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
-GRAY = (128, 128, 128)
 RED = (255, 0, 0)
-BLUE = (0, 0, 255)
+
+# 根源区域颜色
+LIGHT_GREEN = (144, 238, 144)  # 浅绿色
+LIGHT_GRAY = (211, 211, 211)   # 浅灰色
+
+# 棋子颜色
+DARK_GREEN = (0, 100, 0)      # 深绿色
+DARK_GRAY = (64, 64, 64)      # 深灰色
 
 # 玩家编码
 PLAYER_GRAY = 1

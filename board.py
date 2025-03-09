@@ -1,5 +1,5 @@
 import pygame
-from config import GRID_SIZE, BOARD_WIDTH, BOARD_HEIGHT, WHITE, BLACK, GREEN, GRAY, RED, BLUE
+from config import GRID_SIZE, BOARD_WIDTH, BOARD_HEIGHT, WHITE, BLACK, LIGHT_GREEN, LIGHT_GRAY, DARK_GREEN, DARK_GRAY
 
 class Board:
     def __init__(self):
@@ -35,9 +35,9 @@ class Board:
                 # 绘制格子
                 color = WHITE
                 if cell_type == 'green_root':
-                    color = GREEN
+                    color = LIGHT_GREEN
                 elif cell_type == 'gray_root':
-                    color = GRAY
+                    color = LIGHT_GRAY
                 pygame.draw.rect(
                     screen,
                     color,
@@ -53,14 +53,14 @@ class Board:
                 if piece == 'gray_leaf':
                     pygame.draw.circle(
                         screen,
-                        RED,  # 灰方棋子颜色（示例用红色）
+                        DARK_GRAY,  # 灰方棋子颜色
                         (x * self.grid_size + self.grid_size // 2, y * self.grid_size + self.grid_size // 2),
                         self.grid_size // 2 - 5  # 留出边框
                     )
                 elif piece == 'green_leaf':
                     pygame.draw.circle(
                         screen,
-                        BLUE,  # 青方棋子颜色（示例用蓝色）
+                        DARK_GREEN,  # 青方棋子颜色
                         (x * self.grid_size + self.grid_size // 2, y * self.grid_size + self.grid_size // 2),
                         self.grid_size // 2 - 5
                     )
@@ -71,7 +71,7 @@ class Board:
                     size = self.grid_size // 2 - 5
                     rect_x = center_x - size
                     rect_y = center_y - size
-                    pygame.draw.rect(screen, RED, (rect_x, rect_y, size * 2, size * 2))
+                    pygame.draw.rect(screen, DARK_GRAY, (rect_x, rect_y, size * 2, size * 2))
                 elif piece == 'green_trunk':
                     # 绘制青方干棋子（正方形）
                     center_x = x * self.grid_size + self.grid_size // 2
@@ -79,7 +79,7 @@ class Board:
                     size = self.grid_size // 2 - 5
                     rect_x = center_x - size
                     rect_y = center_y - size
-                    pygame.draw.rect(screen, BLUE, (rect_x, rect_y, size * 2, size * 2))
+                    pygame.draw.rect(screen, DARK_GREEN, (rect_x, rect_y, size * 2, size * 2))
                 elif piece == 'gray_branch':
                     # 绘制灰方枝棋子（三角形）
                     center_x = x * self.grid_size + self.grid_size // 2
@@ -90,7 +90,7 @@ class Board:
                         (center_x - size, center_y + size),  # 左下
                         (center_x + size, center_y + size)   # 右下
                     ]
-                    pygame.draw.polygon(screen, RED, points)
+                    pygame.draw.polygon(screen, DARK_GRAY, points)
                 elif piece == 'green_branch':
                     # 绘制青方枝棋子（三角形）
                     center_x = x * self.grid_size + self.grid_size // 2
@@ -101,4 +101,4 @@ class Board:
                         (center_x - size, center_y + size),  # 左下
                         (center_x + size, center_y + size)   # 右下
                     ]
-                    pygame.draw.polygon(screen, BLUE, points)
+                    pygame.draw.polygon(screen, DARK_GREEN, points)
