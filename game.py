@@ -26,6 +26,8 @@ class Game:
         self.gray_trunk_cooldown = False  # 灰方干棋子是否在冷却中
         self.green_trunk_cooldown = False  # 青方干棋子是否在冷却中
         self.selected_piece_type = 'leaf'  # 当前选择的棋子类型：'leaf', 'branch', 'trunk'
+        self.gray_pieces = ['gray_leaf', 'gray_branch', 'gray_trunk']
+        self.green_pieces = ['green_leaf', 'green_branch', 'green_trunk']
 
     def run(self):
         while not self.game_over:
@@ -34,9 +36,6 @@ class Game:
                     self.game_over = True
                 if event.type == pygame.MOUSEBUTTONDOWN and not self.game_over:  # 如果按下鼠标
                     self.handle_click(event.pos)  # 尝试进行落子
-                    if self.is_win():  # 判定是否胜利
-                        self.game_over = True
-                        self.winner = self.current_player
 
             self.draw()
             pygame.display.flip()
@@ -98,8 +97,20 @@ class Game:
             # 消除逻辑
             self.eliminate_pieces()
 
+            # 判定胜利
+            if self.is_win():
+                self.game_over = True
+                self.winner = self.current_player
+                return
+
             # 切换玩家
             self.switch_player()
+
+            # 判定胜利
+            if self.is_win():
+                self.game_over = True
+                self.winner = self.current_player
+                return
 
     def update_cooldown(self):
         if self.current_player == PLAYER_GRAY:
@@ -362,11 +373,11 @@ class Game:
     def is_win(self):
         if self.current_player == PLAYER_GRAY:
             for x in range(self.width // 4, self.width * 3 // 4):
-                if self.board.board[0][x][1] != 'gray_leaf':
+                if self.board.board[0][x][1] not in self.gray_pieces:
                     return False
         else:
             for x in range(self.width // 4, self.width * 3 // 4):
-                if self.board.board[BOARD_HEIGHT-1][x][1] != 'green_leaf':
+                if self.board.board[BOARD_HEIGHT-1][x][1] not in self.green_pieces:
                     return False
         return True
 
