@@ -64,3 +64,25 @@ class Board:
                         (x * self.grid_size + self.grid_size // 2, y * self.grid_size + self.grid_size // 2),
                         self.grid_size // 2 - 5
                     )
+                elif piece == 'gray_branch':
+                    # 绘制灰方枝棋子（三角形）
+                    center_x = x * self.grid_size + self.grid_size // 2
+                    center_y = y * self.grid_size + self.grid_size // 2
+                    size = self.grid_size // 2 - 5
+                    points = [
+                        (center_x, center_y - size),  # 顶点
+                        (center_x - size, center_y + size),  # 左下
+                        (center_x + size, center_y + size)  # 右下
+                    ]
+                    pygame.draw.polygon(screen, RED, points)
+                elif piece == 'green_branch':
+                    # 绘制青方枝棋子（三角形）
+                    center_x = x * self.grid_size + self.grid_size // 2
+                    center_y = y * self.grid_size + self.grid_size // 2
+                    size = self.grid_size // 2 - 5
+                    points = [
+                        (center_x, center_y - size),  # 顶点
+                        (center_x - size, center_y + size),  # 左下
+                        (center_x + size, center_y + size)  # 右下
+                    ]
+                    pygame.draw.polygon(screen, BLUE, points)
