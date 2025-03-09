@@ -64,6 +64,22 @@ class Board:
                         (x * self.grid_size + self.grid_size // 2, y * self.grid_size + self.grid_size // 2),
                         self.grid_size // 2 - 5
                     )
+                elif piece == 'gray_trunk':
+                    # 绘制灰方干棋子（正方形）
+                    center_x = x * self.grid_size + self.grid_size // 2
+                    center_y = y * self.grid_size + self.grid_size // 2
+                    size = self.grid_size // 2 - 5
+                    rect_x = center_x - size
+                    rect_y = center_y - size
+                    pygame.draw.rect(screen, RED, (rect_x, rect_y, size * 2, size * 2))
+                elif piece == 'green_trunk':
+                    # 绘制青方干棋子（正方形）
+                    center_x = x * self.grid_size + self.grid_size // 2
+                    center_y = y * self.grid_size + self.grid_size // 2
+                    size = self.grid_size // 2 - 5
+                    rect_x = center_x - size
+                    rect_y = center_y - size
+                    pygame.draw.rect(screen, BLUE, (rect_x, rect_y, size * 2, size * 2))
                 elif piece == 'gray_branch':
                     # 绘制灰方枝棋子（三角形）
                     center_x = x * self.grid_size + self.grid_size // 2
@@ -72,7 +88,7 @@ class Board:
                     points = [
                         (center_x, center_y - size),  # 顶点
                         (center_x - size, center_y + size),  # 左下
-                        (center_x + size, center_y + size)  # 右下
+                        (center_x + size, center_y + size)   # 右下
                     ]
                     pygame.draw.polygon(screen, RED, points)
                 elif piece == 'green_branch':
@@ -83,6 +99,6 @@ class Board:
                     points = [
                         (center_x, center_y - size),  # 顶点
                         (center_x - size, center_y + size),  # 左下
-                        (center_x + size, center_y + size)  # 右下
+                        (center_x + size, center_y + size)   # 右下
                     ]
                     pygame.draw.polygon(screen, BLUE, points)

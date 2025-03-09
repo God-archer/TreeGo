@@ -21,7 +21,11 @@ class Game:
         self.green_branch_used = False  # 青方枝棋子是否已使用
         self.gray_branch_cooldown = False  # 灰方枝棋子是否在冷却中
         self.green_branch_cooldown = False  # 青方枝棋子是否在冷却中
-        self.selected_piece_type = 'leaf'  # 当前选择的棋子类型：'leaf', 'branch', 'root'
+        self.gray_trunk_used = False  # 灰方干棋子是否已使用
+        self.green_trunk_used = False  # 青方干棋子是否已使用
+        self.gray_trunk_cooldown = False  # 灰方干棋子是否在冷却中
+        self.green_trunk_cooldown = False  # 青方干棋子是否在冷却中
+        self.selected_piece_type = 'leaf'  # 当前选择的棋子类型：'leaf', 'branch', 'trunk'
 
     def run(self):
         while not self.game_over:
@@ -45,7 +49,7 @@ class Game:
         if button_y <= y <= button_y + 40:
             button_x = (x - 10) // 120
             if 0 <= button_x <= 2:
-                piece_types = ['leaf', 'branch', 'root']
+                piece_types = ['leaf', 'branch', 'trunk']
                 if button_x < len(piece_types):
                     self.selected_piece_type = piece_types[button_x]
                 return
@@ -72,6 +76,15 @@ class Game:
                     if self.green_branch_used or self.green_branch_cooldown:
                         return  # 已使用过枝棋子或在冷却中
                     self.green_branch_used = True
+            elif self.selected_piece_type == 'trunk':
+                if piece_prefix == 'gray':
+                    if self.gray_trunk_used or self.gray_trunk_cooldown:
+                        return  # 已使用过干棋子或在冷却中
+                    self.gray_trunk_used = True
+                else:
+                    if self.green_trunk_used or self.green_trunk_cooldown:
+                        return  # 已使用过干棋子或在冷却中
+                    self.green_trunk_used = True
             
             # 放置棋子
             self.board.board[y][x] = (self.board.board[y][x][0], piece_type)
@@ -91,8 +104,10 @@ class Game:
     def update_cooldown(self):
         if self.current_player == PLAYER_GRAY:
             self.gray_branch_cooldown = False
+            self.gray_trunk_cooldown = False
         else:
             self.green_branch_cooldown = False
+            self.green_trunk_cooldown = False
 
     def switch_player(self):
         # 切换玩家
@@ -101,13 +116,13 @@ class Game:
     def eliminate_pieces(self):
         # 获取当前玩家和敌方玩家的棋子颜色，根源颜色
         if self.current_player == PLAYER_GRAY:
-            player_pieces = ['gray_leaf', 'gray_branch']
-            enemy_pieces = ['green_leaf', 'green_branch']
+            player_pieces = ['gray_leaf', 'gray_branch', 'gray_trunk']
+            enemy_pieces = ['green_leaf', 'green_branch', 'green_trunk']
             player_root = "gray_root"
             enemy_root = "green_root"
         else:
-            player_pieces = ['green_leaf', 'green_branch']
-            enemy_pieces = ['gray_leaf', 'gray_branch']
+            player_pieces = ['green_leaf', 'green_branch', 'green_trunk']
+            enemy_pieces = ['gray_leaf', 'gray_branch', 'gray_trunk']
             player_root = "green_root"
             enemy_root = "gray_root"
 
@@ -134,13 +149,19 @@ class Game:
                     for i in range(y - 2, y + 1):
                         piece_type = self.board.board[i][x][1]
                         self.board.board[i][x] = (self.board.board[i][x][0], None)
-                        # 设置枝棋子冷却状态
+                        # 设置冷却状态
                         if piece_type == 'gray_branch':
                             self.gray_branch_used = False
                             self.gray_branch_cooldown = True
                         elif piece_type == 'green_branch':
                             self.green_branch_used = False
                             self.green_branch_cooldown = True
+                        elif piece_type == 'gray_trunk':
+                            self.gray_trunk_used = False
+                            self.gray_trunk_cooldown = True
+                        elif piece_type == 'green_trunk':
+                            self.green_trunk_used = False
+                            self.green_trunk_cooldown = True
 
         # 检查横向消除（当前玩家）
         for y in range(self.height):
@@ -165,13 +186,19 @@ class Game:
                     for i in range(x - 2, x + 1):
                         piece_type = self.board.board[y][i][1]
                         self.board.board[y][i] = (self.board.board[y][i][0], None)
-                        # 设置枝棋子冷却状态
+                        # 设置冷却状态
                         if piece_type == 'gray_branch':
                             self.gray_branch_used = False
                             self.gray_branch_cooldown = True
                         elif piece_type == 'green_branch':
                             self.green_branch_used = False
                             self.green_branch_cooldown = True
+                        elif piece_type == 'gray_trunk':
+                            self.gray_trunk_used = False
+                            self.gray_trunk_cooldown = True
+                        elif piece_type == 'green_trunk':
+                            self.green_trunk_used = False
+                            self.green_trunk_cooldown = True
 
         # 检查纵向消除（敌方玩家）
         for x in range(self.width):
@@ -196,13 +223,19 @@ class Game:
                     for i in range(y - 2, y + 1):
                         piece_type = self.board.board[i][x][1]
                         self.board.board[i][x] = (self.board.board[i][x][0], None)
-                        # 设置枝棋子冷却状态
+                        # 设置冷却状态
                         if piece_type == 'gray_branch':
                             self.gray_branch_used = False
                             self.gray_branch_cooldown = True
                         elif piece_type == 'green_branch':
                             self.green_branch_used = False
                             self.green_branch_cooldown = True
+                        elif piece_type == 'gray_trunk':
+                            self.gray_trunk_used = False
+                            self.gray_trunk_cooldown = True
+                        elif piece_type == 'green_trunk':
+                            self.green_trunk_used = False
+                            self.green_trunk_cooldown = True
 
         # 检查横向消除（敌方玩家）
         for y in range(self.height):
@@ -227,13 +260,19 @@ class Game:
                     for i in range(x - 2, x + 1):
                         piece_type = self.board.board[y][i][1]
                         self.board.board[y][i] = (self.board.board[y][i][0], None)
-                        # 设置枝棋子冷却状态
+                        # 设置冷却状态
                         if piece_type == 'gray_branch':
                             self.gray_branch_used = False
                             self.gray_branch_cooldown = True
                         elif piece_type == 'green_branch':
                             self.green_branch_used = False
                             self.green_branch_cooldown = True
+                        elif piece_type == 'gray_trunk':
+                            self.gray_trunk_used = False
+                            self.gray_trunk_cooldown = True
+                        elif piece_type == 'green_trunk':
+                            self.green_trunk_used = False
+                            self.green_trunk_cooldown = True
 
     def push_pieces(self, x, y):
         # 获取当前玩家的敌方玩家
@@ -346,19 +385,21 @@ class Game:
             if y == 0 and (x >= self.width // 4 and x < self.width * 3 // 4):
                 return False
 
-        # 检查是否在“叶”棋子周围
+        # 定义本方颜色
         if self.current_player == PLAYER_GRAY:
             leaf_color = 'gray_leaf'
             branch_color = 'gray_branch'
+            trunk_color = 'gray_trunk'
         else:
             leaf_color = 'green_leaf'
             branch_color = 'green_branch'
+            trunk_color = 'green_trunk'
 
         # 检查是否在枝棋子的5x3范围内
         if self.is_branch_valid_position(x, y):
             return True
 
-        # 检查周围八个格子是否有"叶"棋子
+        # 检查周围八个格子是否有"叶"棋子或“干”棋子
         for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
                 if dx == 0 and dy == 0:
@@ -368,7 +409,7 @@ class Game:
                     # 检查周围格子是否在根源区域
                     if not self.is_growable(nx, ny):
                         continue  # 如果在根源区域，跳过该格子
-                    if self.board.board[ny][nx][1] == leaf_color:
+                    if self.board.board[ny][nx][1] == leaf_color or self.board.board[ny][nx][1] == trunk_color:
                         return True
         return False
 
