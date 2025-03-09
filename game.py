@@ -371,13 +371,31 @@ class Game:
         return (y == 0 and (x >= self.width // 4 and x < self.width * 3 // 4)) or (y == self.height - 1 and (x >= self.width // 4 and x < self.width * 3 // 4))
 
     def is_win(self):
+        # 检查原有的胜利条件：占领对方根源区域
         if self.current_player == PLAYER_GRAY:
             for x in range(self.width // 4, self.width * 3 // 4):
                 if self.board.board[0][x][1] not in self.gray_pieces:
-                    return False
+                    break
+            else:
+                return True
         else:
             for x in range(self.width // 4, self.width * 3 // 4):
                 if self.board.board[BOARD_HEIGHT-1][x][1] not in self.green_pieces:
+                    break
+            else:
+                return True
+
+        # 检查新的胜利条件：根源区域外没有敌方棋子
+        enemy_pieces = self.green_pieces if self.current_player == PLAYER_GRAY else self.gray_pieces
+        for y in range(self.height):
+            for x in range(self.width):
+                # 跳过对方的根源区域
+                if self.current_player == PLAYER_GRAY and y == 0 and (x >= self.width // 4 and x < self.width * 3 // 4):
+                    continue
+                if self.current_player == PLAYER_GREEN and y == self.height - 1 and (x >= self.width // 4 and x < self.width * 3 // 4):
+                    continue
+                # 检查是否存在敌方棋子
+                if self.board.board[y][x][1] in enemy_pieces:
                     return False
         return True
 
