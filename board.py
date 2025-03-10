@@ -1,5 +1,5 @@
 import pygame
-from config import GRID_SIZE, BOARD_WIDTH, BOARD_HEIGHT, WHITE, BLACK, LIGHT_GREEN, LIGHT_GRAY, DARK_GREEN, DARK_GRAY
+from config import GRID_SIZE, BOARD_WIDTH, BOARD_HEIGHT, WHITE, BLACK, LIGHT_GREEN, LIGHT_GRAY, DARK_GREEN, DARK_GRAY, PLAYER_GRAY, PLAYER_GREEN
 
 class Board:
     def __init__(self):
@@ -7,6 +7,7 @@ class Board:
         self.width = BOARD_WIDTH
         self.height = BOARD_HEIGHT
         self.board = [[(None, None) for _ in range(self.width)] for _ in range(self.height)]  # 初始化为 (None, None)
+        self.game = None  # 添加对Game实例的引用
         # 初始化棋盘状态
         self.setup_board()
 
@@ -102,3 +103,13 @@ class Board:
                         (center_x + size, center_y + size)   # 右下
                     ]
                     pygame.draw.polygon(screen, DARK_GREEN, points)
+                
+                # 绘制可落子区域预览
+                if piece is None and self.game.is_valid_position(x, y):
+                    preview_color = DARK_GRAY if self.game.current_player == PLAYER_GRAY else DARK_GREEN
+                    pygame.draw.circle(
+                        screen,
+                        preview_color,
+                        (x * self.grid_size + self.grid_size // 2, y * self.grid_size + self.grid_size // 2),
+                        5  # 小圆点大小
+                    )

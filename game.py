@@ -9,6 +9,7 @@ class Game:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
         self.board = Board()
+        self.board.game = self  # 设置Board实例的game引用
         self.current_player = PLAYER_GRAY  # 灰方先行
         self.game_over = False
         self.winner = None
