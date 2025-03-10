@@ -32,6 +32,12 @@ LIGHT_GRAY = (211, 211, 211)   # 浅灰色
 DARK_GREEN = (0, 100, 0)      # 深绿色
 DARK_GRAY = (64, 64, 64)      # 深灰色
 
+# 菜单按钮颜色
+BUTTON_BG = (70, 130, 180)      # 钢青色
+BUTTON_HOVER = (100, 149, 237)  # 矢车菊蓝
+BUTTON_SHADOW = (47, 79, 79)    # 深青灰色
+BUTTON_TEXT = (255, 255, 255)   # 白色
+
 # 玩家编码
 PLAYER_GRAY = 1
 PLAYER_GREEN = 2
