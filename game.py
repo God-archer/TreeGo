@@ -45,12 +45,17 @@ class Game:
             pygame.display.flip()
             self.clock.tick(FPS)
             
-            # 检查胜利显示时间
-            if self.game_over and self.winner:
-                current_time = pygame.time.get_ticks()
-                if self.victory_display_timer == 0:
-                    self.victory_display_timer = current_time
-                elif current_time - self.victory_display_timer >= self.victory_display_duration:
+            # 检查游戏结束条件
+            if self.game_over:
+                if self.winner:
+                    # 如果是胜利结束，显示胜利画面
+                    current_time = pygame.time.get_ticks()
+                    if self.victory_display_timer == 0:
+                        self.victory_display_timer = current_time
+                    elif current_time - self.victory_display_timer >= self.victory_display_duration:
+                        return
+                else:
+                    # 如果是点击返回按钮结束，直接返回
                     return
 
     def handle_click(self, pos):
@@ -539,7 +544,7 @@ class Game:
             self.screen.blit(text, text_rect)
         
         # 显示胜利信息
-        if self.game_over:
+        if self.game_over and self.winner:
             # 创建半透明背景
             overlay = pygame.Surface((300, 100), pygame.SRCALPHA)
             pygame.draw.rect(overlay, (0, 0, 0, 128), overlay.get_rect())
