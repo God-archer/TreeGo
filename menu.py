@@ -103,10 +103,32 @@ class Menu:
                 coming_soon_text = self.font.render("敬请期待", True, WHITE)
                 text_rect = coming_soon_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
                 self.screen.blit(coming_soon_text, text_rect)
+
+                # 绘制关闭按钮
+                close_button_size = 30
+                close_button_rect = pygame.Rect(
+                    text_rect.right + 50,  # 位于文本右侧
+                    text_rect.centery - close_button_size // 2,  # 垂直居中
+                    close_button_size,
+                    close_button_size
+                )
+                # 绘制关闭按钮背景
+                pygame.draw.rect(self.screen, BUTTON_BG, close_button_rect, border_radius=5)
+                # 绘制叉号
+                close_text = self.font.render("×", True, BUTTON_TEXT)
+                close_text_rect = close_text.get_rect(center=close_button_rect.center)
+                self.screen.blit(close_text, close_text_rect)
+                # 存储关闭按钮位置供点击检测使用
+                self.close_button_rect = close_button_rect
             else:
                 self.show_coming_soon = False
     
     def handle_click(self, pos):
+        # 检查是否点击了关闭按钮
+        if self.show_coming_soon and hasattr(self, 'close_button_rect') and self.close_button_rect.collidepoint(pos):
+            self.show_coming_soon = False
+            return None
+
         if self.current_menu == "main":
             # 检查主菜单点击
             for i, rect in enumerate(self.main_menu_positions):

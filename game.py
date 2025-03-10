@@ -44,6 +44,11 @@ class Game:
 
     def handle_click(self, pos):
         x, y = pos
+        # 检查是否点击了返回按钮
+        if hasattr(self, 'back_button_rect') and self.back_button_rect.collidepoint(pos):
+            self.game_over = True
+            return
+            
         # 检查是否点击了棋子选择按钮
         button_y = SCREEN_HEIGHT - 60
         if button_y <= y <= button_y + 40:
@@ -499,7 +504,15 @@ class Game:
         # piece_surface = font.render(piece_text, True, BLACK)
         
         self.screen.blit(player_surface, (10, 10))
-        # self.screen.blit(piece_surface, (10, 50))
+        
+        # 绘制返回按钮
+        back_button_rect = pygame.Rect(10, 40, 80, 30)
+        pygame.draw.rect(self.screen, WHITE, back_button_rect)
+        pygame.draw.rect(self.screen, BLACK, back_button_rect, 2)
+        back_text = font.render("返回", True, BLACK)
+        back_text_rect = back_text.get_rect(center=back_button_rect.center)
+        self.screen.blit(back_text, back_text_rect)
+        self.back_button_rect = back_button_rect  # 存储返回按钮位置供点击检测使用
         
         # 绘制棋子选择按钮
         button_y = SCREEN_HEIGHT - 60
