@@ -29,18 +29,29 @@ class Game:
         self.selected_piece_type = 'leaf'  # 当前选择的棋子类型：'leaf', 'branch', 'trunk'
         self.gray_pieces = ['gray_leaf', 'gray_branch', 'gray_trunk']
         self.green_pieces = ['green_leaf', 'green_branch', 'green_trunk']
+        self.victory_display_timer = 0  # 胜利显示计时器
+        self.victory_display_duration = 3000  # 胜利显示持续时间（毫秒）
 
     def run(self):
-        while not self.game_over:
+        while True:  # 修改为无限循环
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.game_over = True
+                    return
                 if event.type == pygame.MOUSEBUTTONDOWN and not self.game_over:  # 如果按下鼠标
                     self.handle_click(event.pos)  # 尝试进行落子
 
             self.draw()
             pygame.display.flip()
             self.clock.tick(FPS)
+            
+            # 检查胜利显示时间
+            if self.game_over and self.winner:
+                current_time = pygame.time.get_ticks()
+                if self.victory_display_timer == 0:
+                    self.victory_display_timer = current_time
+                elif current_time - self.victory_display_timer >= self.victory_display_duration:
+                    return
 
     def handle_click(self, pos):
         x, y = pos
@@ -529,6 +540,18 @@ class Game:
         
         # 显示胜利信息
         if self.game_over:
-            text = font.render(f"{'灰方' if self.winner == PLAYER_GRAY else '青方'} 胜利!", True, RED)
-            print(f"{'灰方' if self.winner == PLAYER_GRAY else '青方'} 胜利!")
-            self.screen.blit(text, (SCREEN_WIDTH // 2 - 150, SCREEN_HEIGHT // 2))
+            # 创建半透明背景
+            overlay = pygame.Surface((300, 100), pygame.SRCALPHA)
+            pygame.draw.rect(overlay, (0, 0, 0, 128), overlay.get_rect())
+            overlay_rect = overlay.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+            self.screen.blit(overlay, overlay_rect)
+            
+            # 绘制边框
+            pygame.draw.rect(self.screen, BLACK, overlay_rect, 2)
+            
+            # 显示胜利文本
+            font = pygame.font.Font("c:\Windows\Fonts\msyh.ttc", 36)  # 使用更大的字体
+            text = font.render(f"{'灰方' if self.winner == PLAYER_GRAY else '青方'} 胜利!", True, WHITE)
+            text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+            self.screen.blit(text, text_rect)
+            # 删除多余的渲染代码
