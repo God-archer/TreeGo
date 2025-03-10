@@ -365,9 +365,9 @@ class Game:
 
         # 检查新位置是否在棋盘内且为空
         if 0 <= new_x < self.width and 0 <= new_y < self.height and self.board.board[new_y][new_x][1] is None:
-            # 更新最后一个棋子的位置
-            self.board.board[new_y][new_x] = self.board.board[current_y][current_x]
-            self.board.board[current_y][current_x] = (None, None)
+            # 更新最后一个棋子的位置，保留根源区域信息
+            self.board.board[new_y][new_x] = (self.board.board[new_y][new_x][0], self.board.board[current_y][current_x][1])
+            self.board.board[current_y][current_x] = (self.board.board[current_y][current_x][0], None)
             # 更新其他棋子的位置
             for i in range(len(push_chain) - 1, -1, -1):
                 if i == 0:
@@ -375,8 +375,8 @@ class Game:
                 else:
                     prev_x, prev_y = push_chain[i - 1]
                 current_x, current_y = push_chain[i]
-                self.board.board[current_y][current_x] = self.board.board[prev_y][prev_x]
-                self.board.board[prev_y][prev_x] = (None, None)
+                self.board.board[current_y][current_x] = (self.board.board[current_y][current_x][0], self.board.board[prev_y][prev_x][1])
+                self.board.board[prev_y][prev_x] = (self.board.board[prev_y][prev_x][0], None)
         else:
             # 如果无法推动到最后一个位置，整条链式移动失败
             pass
@@ -393,7 +393,7 @@ class Game:
         return (y == 0 and (x >= self.width // 4 and x < self.width * 3 // 4)) or (y == self.height - 1 and (x >= self.width // 4 and x < self.width * 3 // 4))
 
     def is_win(self):
-        # 检查原有的胜利条件：占领对方根源区域
+        # 检查一般胜利条件：占领对方根源区域
         if self.current_player == PLAYER_GRAY:
             for x in range(self.width // 4, self.width * 3 // 4):
                 if self.board.board[0][x][1] not in self.gray_pieces:
@@ -407,14 +407,14 @@ class Game:
             else:
                 return True
 
-        # 检查新的胜利条件：根源区域外没有敌方棋子
+        # 检查特殊胜利条件：根源区域外没有敌方棋子
         enemy_pieces = self.green_pieces if self.current_player == PLAYER_GRAY else self.gray_pieces
         for y in range(self.height):
             for x in range(self.width):
-                # 跳过对方的根源区域
-                if self.current_player == PLAYER_GRAY and y == 0 and (x >= self.width // 4 and x < self.width * 3 // 4):
+                # 跳过自己的根源区域
+                if self.current_player == PLAYER_GRAY and y == self.height - 1 and (x >= self.width // 4 and x < self.width * 3 // 4):
                     continue
-                if self.current_player == PLAYER_GREEN and y == self.height - 1 and (x >= self.width // 4 and x < self.width * 3 // 4):
+                if self.current_player == PLAYER_GREEN and y == 0 and (x >= self.width // 4 and x < self.width * 3 // 4):
                     continue
                 # 检查是否存在敌方棋子
                 if self.board.board[y][x][1] in enemy_pieces:
